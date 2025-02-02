@@ -35,7 +35,7 @@
       <div class="messages-section">
         <h3>Сообщения</h3>
         <app-message-list [messages]="messages"></app-message-list>
-        <form [formGroup]="messageForm" (ngSubmit)="sendMessage()">
+        <form class="chat-form"[formGroup]="messageForm" (ngSubmit)="sendMessage()">
           <mat-form-field appearance="fill">
             <mat-label>Введите сообщение</mat-label>
             <input matInput formControlName="message" />

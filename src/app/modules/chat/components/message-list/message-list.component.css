@@ -1,5 +1,6 @@
 mat-list {
-  max-height: 400px;
+  height: calc(100vh - 400px);
+  width: 100vh;
   overflow-y: auto;
   margin-bottom: 1rem;
 }
