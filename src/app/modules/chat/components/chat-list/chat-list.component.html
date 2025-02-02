@@ -1,0 +1,8 @@
+<mat-list>
+  <mat-list-item *ngFor="let channel of channels">
+    {{ channel.name }}
+  </mat-list-item>
+</mat-list>
+<button mat-raised-button color="primary" (click)="addChannel()">
+  + Добавить канал
+</button>

@@ -1,0 +1,9 @@
+mat-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+button {
+  width: 100%;
+}

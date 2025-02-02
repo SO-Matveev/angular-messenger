@@ -1,0 +1,63 @@
+.main-card {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+.main-container {
+  display: flex;
+}
+.info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.messages-section {
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+}
+
+/*.channels-section, .messages-section, .users-section {*/
+/*  flex: 1;*/
+/*}*/
+
+mat-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.online {
+  color: green;
+  margin-left: 0.5rem;
+}
+
+.user-section {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
