@@ -7,6 +7,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCardModule} from '@angular/material/card';
+import {loginFailure, loginSuccess} from '../../store/auth/auth.actions';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'app-login-page',
@@ -30,7 +32,7 @@ export class LoginPageComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private store: Store
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -46,27 +48,14 @@ export class LoginPageComponent {
   public onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-
-      if (this.isLoginMode) {
-        // Вход
-        this.authService.login(email, password).subscribe({
-          next: () => {
-            this.router.navigate(['/']);
-          },
-          error: (err) => {
-            this.errorMessage = err.message;
-          },
-        });
-      } else {
-        this.authService.register(email, password).subscribe({
-          next: () => {
-            this.router.navigate(['/']);
-          },
-          error: (err) => {
-            this.errorMessage = err.message;
-          },
-        });
-      }
+      this.authService.login(email, password).subscribe({
+        next: (user) => {
+          this.store.dispatch(loginSuccess({ user }));
+        },
+        error: (error) => {
+          this.store.dispatch(loginFailure({ error }));
+        },
+      });
     }
   }
 }

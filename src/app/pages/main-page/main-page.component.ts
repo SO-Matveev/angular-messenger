@@ -12,6 +12,10 @@ import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {ChatModule} from '../../modules/chat/chat.module';
 import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {loadChannels, sendMessage} from '../../store/chat/chat.actions';
+import {AppState} from '../../store';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-main-page',
@@ -26,10 +30,11 @@ import {Observable} from 'rxjs';
     MatCardModule,
     MatListModule,
     MatIconModule,
-    ChatModule
+    ChatModule,
   ],
   standalone: true
 })
+
 export class MainPageComponent implements OnInit {
   messageForm: FormGroup;
   user$: Observable<any>; // Информация о текущем пользователе
@@ -52,7 +57,8 @@ export class MainPageComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private store: Store<AppState>,
   ) {
     this.messageForm = this.fb.group({
       message: ['', [Validators.required]],
@@ -67,17 +73,24 @@ export class MainPageComponent implements OnInit {
       }
     });
     this.user$ = this.authService.getCurrentUser();
+    this.store.dispatch(loadChannels());
+    // Подписка на состояние чата
+    this.store.select((state) => state.chat).subscribe((chatState) => {
+      this.channels = chatState.channels;
+      this.messages = chatState.messages;
+    });
   }
 
   public sendMessage() {
     if (this.messageForm.valid) {
       const newMessage: Message = {
-        id: (this.messages.length + 1).toString(),
+        id: uuidv4(),
         from_user: 'Current User', // Замените на текущего пользователя
         content: this.messageForm.value.message,
         channel_id: '1', // Замените на текущий канал
       };
-      this.messages.push(newMessage);
+
+      this.store.dispatch(sendMessage( {message:newMessage}));
       this.messageForm.reset();
     }
   }
