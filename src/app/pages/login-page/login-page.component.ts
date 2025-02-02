@@ -27,7 +27,11 @@ export class LoginPageComponent {
   errorMessage: string | null = null;
   isLoginMode = true;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -35,11 +39,11 @@ export class LoginPageComponent {
   }
 
   // Переключение между входом и регистрацией
-  onSwitchMode() {
+  public onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
   }
 
-  onSubmit() {
+  public onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
 

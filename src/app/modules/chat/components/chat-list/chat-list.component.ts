@@ -7,9 +7,10 @@ import { Channel } from '../../../../core/interfaces/interfaces';
   styleUrls: ['./chat-list.component.css'],
 })
 export class ChatListComponent {
-  @Input() channels: Channel[] = []; // Входные данные: список каналов
+  // Входные данные: список каналов
+  @Input() channels: Channel[] = [];
 
-  addChannel() {
+  public addChannel() {
     const newChannel: Channel = {
       id: (this.channels.length + 1).toString(),
       name: `#new-channel-${this.channels.length + 1}`,

@@ -49,23 +49,27 @@ export class MainPageComponent implements OnInit {
     { id: '3', username: 'Andrew', is_online: true },
   ];
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.messageForm = this.fb.group({
       message: ['', [Validators.required]],
     });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     // Проверка авторизации
     this.authService.getCurrentUser().subscribe((user) => {
       if (!user) {
-        this.router.navigate(['/login']); // Перенаправление на страницу авторизации
+        this.router.navigate(['/login']);
       }
     });
     this.user$ = this.authService.getCurrentUser();
   }
 
-  sendMessage() {
+  public sendMessage() {
     if (this.messageForm.valid) {
       const newMessage: Message = {
         id: (this.messages.length + 1).toString(),
@@ -78,7 +82,7 @@ export class MainPageComponent implements OnInit {
     }
   }
 
-  addUser() {
+  public addUser() {
     const newUser: User = {
       id: (this.users.length + 1).toString(),
       username: `User-${this.users.length + 1}`,
@@ -87,13 +91,13 @@ export class MainPageComponent implements OnInit {
     this.users.push(newUser);
   }
   // Переход на страницу профиля
-  goToProfile() {
+  public goToProfile() {
     this.router.navigate(['/profile']);
   }
   // Выход из системы
-  logout() {
+  public logout() {
     this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']); // Перенаправление на страницу авторизации
+      this.router.navigate(['/login']);
     });
   }
 }

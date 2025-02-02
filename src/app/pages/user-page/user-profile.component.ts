@@ -22,16 +22,20 @@ import {ReactiveFormsModule} from '@angular/forms';
   standalone:true
 })
 export class UserProfileComponent {
-  user$: Observable<any>; // Информация о текущем пользователе
+  // Информация о текущем пользователе
+  user$: Observable<any>;
 
-  constructor(private authService: AuthService, private router: Router) {
-    this.user$ = this.authService.getCurrentUser(); // Получаем текущего пользователя
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.user$ = this.authService.getCurrentUser();
   }
 
   // Выход из системы
-  logout() {
+  public logout() {
     this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']); // Перенаправление на страницу авторизации
+      this.router.navigate(['/login']);
     });
   }
 }

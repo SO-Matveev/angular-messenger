@@ -10,22 +10,22 @@ export class AuthService {
   constructor() {}
 
   // Вход пользователя
-  login(email: string, password: string): Observable<void> {
+  public login(email: string, password: string): Observable<void> {
     return from(signInWithEmailAndPassword(auth, email, password).then(() => {}));
   }
 
   // Регистрация пользователя
-  register(email: string, password: string): Observable<void> {
+  public register(email: string, password: string): Observable<void> {
     return from(createUserWithEmailAndPassword(auth, email, password).then(() => {}));
   }
 
   // Выход пользователя
-  logout(): Observable<void> {
+  public logout(): Observable<void> {
     return from(signOut(auth));
   }
 
   // Получение текущего пользователя
-  getCurrentUser(): Observable<any> {
+  public getCurrentUser(): Observable<any> {
     return new Observable((observer) => {
       auth.onAuthStateChanged((user) => {
         observer.next(user);
