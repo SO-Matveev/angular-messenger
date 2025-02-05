@@ -26,12 +26,21 @@
           <mat-error>Минимум 6 символов</mat-error>
         </mat-form-field>
 
+        <div *ngIf="error$ | async as error" class="error-message">
+          {{ error }}
+        </div>
+
         <button
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="authForm.invalid">
-          {{ isLoginMode ? 'Войти' : 'Зарегистрироваться' }}
+          [disabled]="authForm.invalid || (loading$ | async)">
+          <span *ngIf="loading$ | async">
+            <i class="fas fa-spinner fa-spin"></i> Загрузка...
+          </span>
+          <span *ngIf="!(loading$ | async)">
+            {{ isLoginMode ? 'Войти' : 'Зарегистрироваться' }}
+          </span>
         </button>
 
         <button

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { register, login } from '../../../../store/auth/auth.actions';
+import {Observable} from 'rxjs';
+import {selectAuthError, selectAuthLoading} from '../../../../store/auth/auth.selectors';
 
 
 @Component({
@@ -12,6 +14,8 @@ import { register, login } from '../../../../store/auth/auth.actions';
 export class AuthComponent {
   protected authForm: FormGroup;
   public isLoginMode = false;
+  public error$: Observable<string | null>;
+  public loading$: Observable<boolean>;
 
   constructor(
     private fb: FormBuilder,
@@ -22,6 +26,9 @@ export class AuthComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
+
+    this.error$ = this.store.select(selectAuthError);
+    this.loading$ = this.store.select(selectAuthLoading);
   }
 
   // Переключение между режимами входа и регистрации
