@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { register, login } from '../../../../store/auth/auth.actions';
-import { User } from '../../core/interfaces/interfaces';
 
 
 @Component({
@@ -11,7 +10,7 @@ import { User } from '../../core/interfaces/interfaces';
   styleUrls: ['./auth.component.css'],
 })
 export class AuthComponent {
-  private authForm: FormGroup;
+  protected authForm: FormGroup;
   public isLoginMode = false;
 
   constructor(
@@ -35,8 +34,7 @@ export class AuthComponent {
   public onSubmit() {
     if (this.authForm.invalid) return;
 
-    // const { username, email, password } = this.authForm.value;
-    const user: User = this.authForm.value
+    const { username, email, password } = this.authForm.value;
 
     if (this.isLoginMode) {
       this.store.dispatch(login({ email, password }));

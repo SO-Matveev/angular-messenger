@@ -3,7 +3,7 @@ export interface User {
   username: string;
   email: string
   password: string
-  is_online: boolean;
+  is_online?: boolean;
 }
 
 export interface Channel {

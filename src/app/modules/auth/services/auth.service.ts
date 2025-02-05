@@ -11,7 +11,7 @@ export class AuthService {
   constructor() {}
 
   // Регистрация пользователя
-  register(username: string, email: string, password: string): Observable<void> {
+  public register(username: string, email: string, password: string): Observable<void> {
     return from(createUserWithEmailAndPassword(auth, email, password)).pipe(
       switchMap((userCredential) => {
         const user: User = {
@@ -27,7 +27,7 @@ export class AuthService {
   }
 
   // Вход пользователя
-  login(email: string, password: string): Observable<User> {
+  public login(email: string, password: string): Observable<User> {
     return from(signInWithEmailAndPassword(auth, email, password)).pipe(
       switchMap((userCredential) => {
         const userId = userCredential.user?.uid;
