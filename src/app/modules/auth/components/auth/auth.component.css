@@ -1,0 +1,43 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+button[mat-raised-button] {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+@media (max-width: 1024px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+
+  mat-card-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 10px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}

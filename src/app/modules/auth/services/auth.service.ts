@@ -1,24 +1,45 @@
 import { Injectable } from '@angular/core';
-import { auth } from '../../../core/firebase-config';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { Observable, from } from 'rxjs';
+import { auth, firestore } from '../../../core/firebase-config';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { doc, setDoc, onSnapshot } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
+import { User } from '../../../core/interfaces/interfaces';
+import { Observable, from, switchMap } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   constructor() {}
 
-  public login(email: string, password: string): Observable<any> {
-    return from(signInWithEmailAndPassword(auth, email, password));
+  // Регистрация пользователя
+  register(username: string, email: string, password: string): Observable<void> {
+    return from(createUserWithEmailAndPassword(auth, email, password)).pipe(
+      switchMap((userCredential) => {
+        const user: User = {
+          id: uuidv4(),
+          username,
+          email,
+          password: password, // Не храните пароль в открытом виде на практике
+          is_online: true,
+        };
+        return setDoc(doc(firestore, 'users', user.id), user);
+      })
+    );
   }
 
-  public register(email: string, password: string): Observable<any> {
-    return from(createUserWithEmailAndPassword(auth, email, password));
-  }
-
-  public logout(): Observable<void> {
-    return from(signOut(auth));
+  // Вход пользователя
+  login(email: string, password: string): Observable<User> {
+    return from(signInWithEmailAndPassword(auth, email, password)).pipe(
+      switchMap((userCredential) => {
+        const userId = userCredential.user?.uid;
+        return new Observable<User>((observer) => {
+          const userRef = doc(firestore, 'users', userId);
+          onSnapshot(userRef, (snapshot) => {
+            const user = snapshot.data() as User;
+            observer.next(user);
+          });
+        });
+      })
+    );
   }
 
   public getCurrentUser(): Observable<any> {
