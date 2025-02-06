@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { auth, firestore } from '../../../core/firebase-config';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../../core/interfaces/interfaces';
@@ -48,5 +48,14 @@ export class AuthService {
         observer.next(user);
       });
     });
+  }
+
+  // Получение ID текущего пользователя
+  getCurrentUserId(): string | null {
+    return auth.currentUser?.uid || null;
+  }
+
+  public logout(): Observable<void> {
+    return from(signOut(auth));
   }
 }

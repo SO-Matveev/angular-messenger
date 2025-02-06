@@ -9,7 +9,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {ReactiveFormsModule} from '@angular/forms';
 
 @Component({
-  selector: 'app-user-profile',
+  selector: 'app-users-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
   imports: [

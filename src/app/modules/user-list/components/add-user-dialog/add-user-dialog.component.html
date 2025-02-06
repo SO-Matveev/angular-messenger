@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Добавить пользователя</h2>
+<mat-dialog-content>
+  <mat-selection-list>
+    <mat-list-option *ngFor="let user of allUsers$ | async" (click)="toggleUser(user.id)">
+      {{ user.username }} ({{ user.email }})
+    </mat-list-option>
+  </mat-selection-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close()">Отмена</button>
+  <button mat-button color="primary" (click)="addUsers()">Добавить</button>
+</mat-dialog-actions>

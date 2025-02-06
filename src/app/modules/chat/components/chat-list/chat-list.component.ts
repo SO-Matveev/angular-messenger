@@ -1,25 +1,31 @@
-import { Component, Input } from '@angular/core';
-import { Channel } from '../../../../core/interfaces/interfaces';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import {ChatService} from '../../services/chat.service';
-import { v4 as uuidv4 } from 'uuid';
-
+import { selectChats } from '../../../../store/chat/chat.selectors';
+import {loadChats, selectChat} from '../../../../store/chat/chat.actions';
+import { Chat } from '../../../../core/interfaces/interfaces';
 @Component({
   selector: 'app-chat-list',
   templateUrl: './chat-list.component.html',
   styleUrls: ['./chat-list.component.css'],
 })
-export class ChatListComponent {
-  // Входные данные: список каналов
-  @Input() channels: Channel[] = [];
+export class ChatListComponent implements OnInit {
+ protected chats$: Observable<Chat[]>;
 
-  constructor(public chatservice: ChatService) {
+  constructor(private store: Store, private chatService: ChatService) {
+    this.chats$ = this.store.select(selectChats);
   }
 
-  public addChannel() {
-    const newChannel: Channel = {
-      id: uuidv4(),
-      name: `#new-channel-${this.channels.length + 1}`,
-    };
-    this.chatservice.addChannel(newChannel)
+  ngOnInit(): void {
+    this.store.dispatch(loadChats());
+  }
+
+ public onSelectChat(chatId: string): void {
+    this.store.dispatch(selectChat({ chatId }));
+  }
+
+  public onAddChat(): void {
+    this.chatService.openAddChatDialog();
   }
 }

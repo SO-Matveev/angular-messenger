@@ -1,8 +1,13 @@
-<mat-list>
-  <mat-list-item *ngFor="let channel of channels">
-    {{ channel.name }}
-  </mat-list-item>
-</mat-list>
-<button mat-raised-button color="primary" (click)="addChannel()">
-  + Добавить канал
-</button>
+<mat-card class="chat-list">
+  <h2>Чаты</h2>
+  <mat-list>
+    <mat-list-item *ngFor="let chat of chats$ | async" (click)="onSelectChat(chat.id)" class="chat-item">
+      {{ chat.name }}
+    </mat-list-item>
+  </mat-list>
+
+  <button mat-raised-button color="primary" (click)="onAddChat()">
+    <mat-icon>add</mat-icon>
+    Добавить канал
+  </button>
+</mat-card>

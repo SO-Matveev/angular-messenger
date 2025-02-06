@@ -4,46 +4,15 @@
   </mat-card-header>
   <mat-card-content class="main-container">
     <div class="info-container">
-      <div class="user-section">
-        <div *ngIf="user$ | async as user" class="user-info">
-          <p>Вы вошли как: <strong>{{ user.displayName || user.email }}</strong></p>
-          <button mat-raised-button color="primary" (click)="goToProfile()">
-            <i class="fa-regular fa-sun"></i>
-            <div>Профиль</div>
-          </button>
-          <button mat-raised-button color="warn" (click)="logout()">
-            <mat-icon>logout</mat-icon> Выйти
-          </button>
-        </div>
+      <div>
+        <app-chat-list></app-chat-list>
       </div>
-      <div class="channels-section">
-        <h3>Каналы</h3>
-        <app-chat-list [channels]="channels"></app-chat-list>
-      </div>
-      <div class="users-section">
-        <h3>Пользователи</h3>
-        <mat-list>
-          <mat-list-item *ngFor="let user of users">
-            {{ user.username }} <span *ngIf="user.is_online" class="online">●</span>
-          </mat-list-item>
-        </mat-list>
-        <button mat-raised-button color="primary" (click)="addUser()">
-          + Добавить пользователя
-        </button>
+      <div>
+        <app-users-list></app-users-list>
       </div>
     </div>
       <div class="messages-section">
-        <h3>Сообщения</h3>
-        <app-message-list [messages]="messages"></app-message-list>
-        <form class="chat-form"[formGroup]="messageForm" (ngSubmit)="sendMessage()">
-          <mat-form-field appearance="fill">
-            <mat-label>Введите сообщение</mat-label>
-            <input matInput formControlName="message" />
-          </mat-form-field>
-          <button mat-raised-button color="primary" type="submit" [disabled]="messageForm.invalid">
-            Отправить
-          </button>
-        </form>
+        <app-chat class="app-chat"></app-chat>
       </div>
   </mat-card-content>
 </mat-card>

@@ -1,0 +1,25 @@
+<mat-card class="chat-container">
+  <!-- Заголовок чата -->
+  <div class="chat-header">
+    <h2>{{ (selectedChat$ | async)?.name || 'Выберите чат' }}</h2>
+  </div>
+
+  <!-- Окно сообщений -->
+  <div class="messages-container">
+    <div *ngFor="let message of messages$ | async"
+         [class.my-message]="message.from_user === currentUserId"
+         class="message">
+      <div class="message-content">{{ message.content }}</div>
+    </div>
+  </div>
+
+  <!-- Форма отправки сообщения -->
+  <div class="message-input">
+    <mat-form-field>
+      <input matInput [(ngModel)]="newMessage" placeholder="Напишите сообщение...">
+    </mat-form-field>
+    <button mat-icon-button (click)="sendMessage()" [disabled]="!newMessage.trim()">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</mat-card>

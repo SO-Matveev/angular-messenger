@@ -1,37 +1,70 @@
 import { Injectable } from '@angular/core';
-import { Channel, Message } from '../../../core/interfaces/interfaces';
-import { Observable, of } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ChatDialogComponent } from '../components/chat-dialog/chat-dialog.component';
+import { Socket } from 'ngx-socket-io';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../store/index';
+
+import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { from, Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import {firestore} from '../../../core/firebase-config';
+import {loadChatsSuccess, addChat } from '../../../store/chat/chat.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
-  constructor() {}
 
-  getChannels(): Observable<Channel[]> {
-    // Заменить на реальный запрос к Firebase
-    return of([
-      { id: '1', name: '#general' },
-      { id: '2', name: '#summer' },
-      { id: '3', name: '#party' },
-    ]);
+  constructor(
+    public dialog: MatDialog,
+    private store: Store<AppState>,
+    private socket: Socket
+  ) {
+    // Подписка на событие добавления чата через Socket.io
+    this.socket.fromEvent('chatAdded').subscribe((chat: any) => {
+      this.store.dispatch(addChat({ chat }));
+    });
   }
 
-  addChannel(channel: Channel): Observable<Channel> {
-    // Заменить на реальный запрос к Firebase
-    return of(channel);
+  // Загрузка чатов с использованием RxJS
+  public loadChats(): Observable<void> {
+    return from(getDocs(collection(firestore, 'chats'))).pipe(
+      map((querySnapshot) => {
+        const chats = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        this.store.dispatch(loadChatsSuccess({ chats }));
+      }),
+      catchError((error) => {
+        console.error('Error loading chats:', error);
+        return of(); // Возвращаем пустой Observable в случае ошибки
+      })
+    );
   }
 
-  getMessages(channelId: string): Observable<Message[]> {
-    // Заменить на реальный запрос к Firebase
-    return of([
-      { id: '1', from_user: 'Maria', content: 'hey', channel_id: channelId },
-      { id: '2', from_user: 'Max', content: 'hi, im work :(', channel_id: channelId },
-    ]);
+  // Открытие диалогового окна для добавления чата
+  public openAddChatDialog(): void {
+    const dialogRef = this.dialog.open(ChatDialogComponent, {
+      width: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.addChat(result).subscribe();
+      }
+    });
   }
 
-  sendMessage(message: Message): Observable<Message> {
-    // Заменить на реальный запрос к Firebase
-    return of(message);
+  // Добавление нового чата с использованием RxJS
+  public addChat(name: string): Observable<void> {
+    const newChat = { name };
+    return from(addDoc(collection(firestore, 'chats'), newChat)).pipe(
+      map((docRef) => {
+        this.socket.emit('addChat', { id: docRef.id, ...newChat });
+      }),
+      catchError((error) => {
+        console.error('Error adding chat:', error);
+        return of(); // Возвращаем пустой Observable в случае ошибки
+      })
+    );
   }
 }

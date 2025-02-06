@@ -8,5 +8,5 @@ import { Message } from '../../../../core/interfaces/interfaces';
 })
 export class MessageListComponent {
   // Входные данные: список сообщений
-  @Input() messages: Message[] = [];
+  @Input() protected messages: Message[] = [];
 }

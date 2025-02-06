@@ -1,0 +1,14 @@
+<mat-card class="user-list-card">
+  <h2>Пользователи</h2>
+  <mat-list>
+    <mat-list-item *ngFor="let user of users$ | async">
+      <i class="fas fa-circle" [style.color]="user.is_online ? 'green' : 'red'"></i>
+      {{ user.username }}
+    </mat-list-item>
+  </mat-list>
+
+  <button mat-raised-button color="primary" (click)="openAddUserDialog()">
+    <mat-icon>person_add</mat-icon>
+    Добавить пользователя
+  </button>
+</mat-card>

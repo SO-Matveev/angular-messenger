@@ -1,0 +1,22 @@
+.full-width {
+  width: 100%;
+  min-width: 300px;
+}
+
+.mr-8 {
+  margin-right: 8px;
+}
+
+.icon-gray {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.pt-5 {
+  padding-top: 5px;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+  margin-top: 16px;
+  border-top: 1px solid #eee;
+}

@@ -14,8 +14,8 @@ import {selectAuthError, selectAuthLoading} from '../../../../store/auth/auth.se
 export class AuthComponent {
   protected authForm: FormGroup;
   public isLoginMode = false;
-  public error$: Observable<string | null>;
-  public loading$: Observable<boolean>;
+  protected error$: Observable<string | null>;
+  protected loading$: Observable<boolean>;
 
   constructor(
     private fb: FormBuilder,
