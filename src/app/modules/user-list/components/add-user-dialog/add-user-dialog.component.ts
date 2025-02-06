@@ -42,4 +42,14 @@ export class AddUserDialogComponent {
       this.selectedUsers.push(userId);
     }
   }
+
+  // Проверка, выбран ли пользователь
+  public isSelected(userId: string): boolean {
+    return this.selectedUsers.includes(userId);
+  }
+
+  // Отмена и закрытие диалога
+  public cancel(): void {
+    this.dialogRef.close();
+  }
 }

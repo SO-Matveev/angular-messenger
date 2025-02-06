@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
-import {AddUserDialogComponent} from '../add-user-dialog/add-user-dialog.component';
+import { AddUserDialogComponent } from '../add-user-dialog/add-user-dialog.component';
 import { loadUsers } from '../../../../store/users/users.actions';
-import {selectUsers} from '../../../../store/users/users.selectors';
-
+import { selectUsers } from '../../../../store/users/users.selectors';
 
 @Component({
   selector: 'app-users-list',
@@ -17,18 +16,24 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private store: Store,
-    private dialog: MatDialog)
-  {}
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    // Загрузка списка пользователей
+    // Загрузка списка пользователей при инициализации
     this.store.dispatch(loadUsers());
   }
 
   // Открытие диалога добавления пользователя
   public openAddUserDialog(): void {
-    this.dialog.open(AddUserDialogComponent, {
+    const dialogRef = this.dialog.open(AddUserDialogComponent, {
       width: '400px',
+      disableClose: false // Позволяет закрыть диалог по клику вне окна
+    });
+
+    // Обработка результата закрытия диалога (если нужно)
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Dialog closed:', result);
     });
   }
 }
