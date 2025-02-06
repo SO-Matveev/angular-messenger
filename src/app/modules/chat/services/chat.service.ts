@@ -9,7 +9,7 @@ import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { from, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import {firestore} from '../../../core/firebase-config';
-import {loadChatsSuccess, addChat } from '../../../store/chat/chat.actions';
+import {loadChatsSuccess, addChat, loadChatsFailure } from '../../../store/chat/chat.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -28,21 +28,21 @@ export class ChatService {
   }
 
   // Загрузка чатов с использованием RxJS
-  public loadChats(): Observable<void> {
+  public loadChats(): Observable<any> {
     return from(getDocs(collection(firestore, 'chats'))).pipe(
       map((querySnapshot) => {
         const chats = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        this.store.dispatch(loadChatsSuccess({ chats }));
+        return loadChatsSuccess({ chats }); // Возвращаем action вместо dispatch
       }),
       catchError((error) => {
         console.error('Error loading chats:', error);
-        return of(); // Возвращаем пустой Observable в случае ошибки
+        return of(loadChatsFailure({ error }));
       })
     );
   }
 
   // Открытие диалогового окна для добавления чата
-  public openAddChatDialog(): void {
+  openAddChatDialog(): void {
     const dialogRef = this.dialog.open(ChatDialogComponent, {
       width: '400px',
     });
@@ -55,7 +55,7 @@ export class ChatService {
   }
 
   // Добавление нового чата с использованием RxJS
-  public addChat(name: string): Observable<void> {
+  addChat(name: string): Observable<void> {
     const newChat = { name };
     return from(addDoc(collection(firestore, 'chats'), newChat)).pipe(
       map((docRef) => {
