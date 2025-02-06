@@ -1,4 +1,7 @@
 # Angular Messenger
+🚀 **ЖМИ СЮДА ДЛЯ ДЕМО**<br>
+<br>
+[![Live Demo](https://img.shields.io/badge/demo-vercel-blue?style=for-the-badge&logo=vercel)](https://angular-messenger-nu.vercel.app)
 
 Приложение для обмена сообщениями с использованием современных веб-технологий.
 
