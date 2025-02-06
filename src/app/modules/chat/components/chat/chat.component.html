@@ -1,25 +1,36 @@
-<mat-card class="chat-container">
+<mat-card class="chat-card">
   <!-- Заголовок чата -->
-  <div class="chat-header">
-    <h2>{{ (selectedChat$ | async)?.name || 'Выберите чат' }}</h2>
+  <div class="card-header">
+    <h2>
+      <i class="fas fa-comments header-icon"></i>
+      {{ (selectedChat$ | async)?.name || 'Выберите чат' }}
+    </h2>
   </div>
 
   <!-- Окно сообщений -->
-  <div class="messages-container">
-    <div *ngFor="let message of messages$ | async"
-         [class.my-message]="message.from_user === currentUserId"
-         class="message">
-      <div class="message-content">{{ message.content }}</div>
-    </div>
-  </div>
+  <mat-list class="messages-list">
+    <mat-list-item *ngFor="let message of messages$ | async"
+                   [class.my-message]="message.from_user === currentUserId">
+      <div class="message-bubble">
+        <div class="message-content">{{ message.content }}</div>
+      </div>
+    </mat-list-item>
+  </mat-list>
 
   <!-- Форма отправки сообщения -->
   <div class="message-input">
-    <mat-form-field>
-      <input matInput [(ngModel)]="newMessage" placeholder="Напишите сообщение...">
+    <mat-form-field appearance="outline" class="input-field">
+      <i matIconPrefix class="fas fa-comment input-icon"></i>
+      <input matInput [(ngModel)]="newMessage"
+             name="newMessage"
+             placeholder="Напишите сообщение...">
     </mat-form-field>
-    <button mat-icon-button (click)="sendMessage()" [disabled]="!newMessage.trim()">
-      <mat-icon>send</mat-icon>
+    <button mat-flat-button
+            color="primary"
+            (click)="sendMessage()"
+            [disabled]="!newMessage.trim()">
+      <i class="fas fa-paper-plane"></i>
+      Отправить
     </button>
   </div>
 </mat-card>
