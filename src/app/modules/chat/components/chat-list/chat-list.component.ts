@@ -15,15 +15,9 @@ export class ChatListComponent implements OnInit {
 
   constructor(private store: Store, private chatService: ChatService) {
     this.chats$ = this.store.select(selectChats);
-    
-    // Добавим подписку для отладки
-    this.chats$.subscribe(chats => {
-      console.log('Current chats in component:', chats);
-    });
   }
 
   ngOnInit(): void {
-    console.log('ChatListComponent initialized');
     this.store.dispatch(loadChats());
   }
 

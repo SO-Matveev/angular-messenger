@@ -6,13 +6,9 @@ import { Message } from '../interfaces/interfaces';
 @Injectable({ providedIn: 'root' })
 export class SocketService {
   constructor(public socket: Socket) {
-    this.socket.on('connect', () => {
-      console.log('Socket connected');
-    });
+    this.socket.on('connect', () => {});
 
-    this.socket.on('connect_error', (error) => {
-      console.error('Socket connection error:', error);
-    });
+    this.socket.on('connect_error', (error) => {});
   }
 
   // Подписка на новые сообщения

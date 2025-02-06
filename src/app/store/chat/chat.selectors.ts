@@ -7,7 +7,6 @@ export const selectChatState = (state: { chat: ChatState }) => state.chat;
 export const selectChats = createSelector(
   selectChatState,
   (state: ChatState) => {
-    console.log('Selector state:', state); // для отладки
     return state.chats;
   }
 );

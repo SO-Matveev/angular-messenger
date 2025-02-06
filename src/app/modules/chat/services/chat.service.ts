@@ -23,7 +23,7 @@ export class ChatService {
 
   private subscribeToChats(): void {
     const chatsRef = collection(db, 'chats');
-    onSnapshot(chatsRef, 
+    onSnapshot(chatsRef,
       (snapshot) => {
         const chats = snapshot.docs.map(doc => ({
           id: doc.id,
@@ -42,19 +42,14 @@ export class ChatService {
   public loadChats(): Observable<any> {
     const chatsRef = collection(db, 'chats');
     return from(getDocs(chatsRef)).pipe(
-      tap(querySnapshot => {
-        console.log('Raw Firestore response:', querySnapshot);
-      }),
       map((querySnapshot) => {
         const chats = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-        console.log('Mapped chats:', chats);
         return loadChatsSuccess({ chats });
       }),
       catchError((error) => {
-        console.error('Error loading chats:', error);
         return of(loadChatsFailure({ error: error.message }));
       })
     );
@@ -75,16 +70,16 @@ export class ChatService {
 
   // Добавление нового чата
   addChat(name: string): Observable<void> {
-    const newChat = { 
-      name, 
-      createdAt: new Date().toISOString() 
+    const newChat = {
+      name,
+      createdAt: new Date().toISOString()
     };
-    
+
     return from(addDoc(collection(db, 'chats'), newChat)).pipe(
       tap((docRef) => {
-        const chatWithId = { 
-          id: docRef.id, 
-          ...newChat 
+        const chatWithId = {
+          id: docRef.id,
+          ...newChat
         };
         this.store.dispatch(addChat({ chat: chatWithId }));
       }),
