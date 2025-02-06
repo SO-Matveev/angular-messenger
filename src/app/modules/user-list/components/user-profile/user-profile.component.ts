@@ -25,7 +25,7 @@ export class UserProfileComponent {
     this.user$ = this.authService.getCurrentUser()
   }
 
-  onLogout(): void {
+  public onLogout(): void {
     this.store.dispatch(logout());
   }
 }

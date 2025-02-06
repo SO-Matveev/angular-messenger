@@ -29,6 +29,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.setupMessageSending();
   }
 
+  // Подписываемся на выбранный чат и возможность отправлять сообщения
   private setupMessageSending(): void {
     this.sendMessage$.pipe(
       takeUntil(this.destroy$),

@@ -13,6 +13,7 @@ import { selectUsers } from '../../store/users/users.selectors';
 import { switchMap, map } from 'rxjs/operators';
 import { loadUsers } from '../../store/users/users.actions';
 import {UserService} from '../../modules/user-list/services/user.service';
+import {logout} from '../../store/auth/auth.actions';
 
 
 @Component({
@@ -48,16 +49,15 @@ export class UserPageComponent implements OnInit {
     // Инициализируем user$ после загрузки пользователей
     this.user$ = this.authService.getCurrentUser().pipe(
       switchMap(currentUser => {
-        console.log('Текущий пользователь:', currentUser);
+        if (!currentUser) {
+          this.router.navigate(['/login']);
+        }
         return this.store.select(selectUsers).pipe(
           map(users => {
-            console.log('Список всех пользователей:', users);
             const matchedUser = users.find(user => user.email === currentUser.email);
             if (!matchedUser) {
-              console.error('Пользователь не найден в списке');
               throw new Error('Пользователь не найден');
             }
-            console.log('Найденный пользователь:', matchedUser);
             return matchedUser;
           })
         );
@@ -67,9 +67,7 @@ export class UserPageComponent implements OnInit {
 
   // Выход из системы
   public logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']);
-    });
+    this.store.dispatch(logout());
   }
 
   // Метод для возврата на главную страницу

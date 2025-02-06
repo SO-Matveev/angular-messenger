@@ -21,7 +21,7 @@ export class AuthService {
           password: password, // Не храните пароль в открытом виде на практике
           is_online: true,
         };
-        return setDoc(doc(db, 'users', user.id), user);  
+        return setDoc(doc(db, 'users', user.id), user);
       })
     );
   }
@@ -44,7 +44,7 @@ export class AuthService {
       })
     );
   }
-
+  // Получение текущего пользователя
   public getCurrentUser(): Observable<any> {
     return new Observable((observer) => {
       onAuthStateChanged(auth, (user) => {
@@ -54,11 +54,7 @@ export class AuthService {
   }
 
   // Получение ID текущего пользователя
-  getCurrentUserId(): string | null {
+  public getCurrentUserId(): string | null {
     return auth.currentUser?.uid || null;
-  }
-
-  public logout(): Observable<void> {
-    return from(signOut(auth));
   }
 }

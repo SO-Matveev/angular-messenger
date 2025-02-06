@@ -9,15 +9,3 @@ export const selectUsers = createSelector(
   selectUsersFeature,
   (state: UsersState) => state.users
 );
-
-// Селектор для онлайн пользователей
-export const selectOnlineUsers = createSelector(
-  selectUsers,
-  (users) => users.filter((user) => user.is_online)
-);
-
-// Селектор для оффлайн пользователей
-export const selectOfflineUsers = createSelector(
-  selectUsers,
-  (users) => users.filter((user) => !user.is_online)
-);

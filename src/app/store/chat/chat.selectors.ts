@@ -23,15 +23,3 @@ export const selectMessages = createSelector(
   selectChatState,
   (state) => state.messages
 );
-
-// Флаг загрузки
-export const selectChatLoading = createSelector(
-  selectChatState,
-  (state) => state.loading
-);
-
-// Ошибки
-export const selectChatError = createSelector(
-  selectChatState,
-  (state) => state.error
-);

@@ -26,7 +26,7 @@ export class ChatService {
     this.setupMessagesSubscription();
   }
 
-  // Загрузка чатов с использованием RxJS
+  // Загрузка чатов
   public loadChats(): Observable<any> {
     return from(getDocs(collection(db, 'chats'))).pipe(
       map((querySnapshot) => {
@@ -40,16 +40,16 @@ export class ChatService {
     );
   }
 
-  openAddChatDialog(): void {
+  // Открываем диалог для добавления чата
+  public openAddChatDialog(): void {
     const dialogRef = this.dialog.open(ChatDialogComponent, {
       width: '400px',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.addChat(result).subscribe();
-      }
-    });
+    dialogRef.afterClosed().pipe(
+      filter((result) => !!result),
+      switchMap((result) => this.addChat(result)),
+    ).subscribe();
   }
 
   // Добавление нового чата
@@ -65,20 +65,18 @@ export class ChatService {
           id: docRef.id,
           ...newChat
         };
-        console.log('Создан новый чат:', chat);
         // Диспатчим успешное добавление чата
         this.store.dispatch(addChatSuccess({ chat }));
       }),
       map(() => null),
       catchError(error => {
-        console.error('Ошибка при создании чата:', error);
         this.store.dispatch(addChatFailure({ error }));
         return of(null);
       })
     );
   }
 
-
+  // Метод изменения текущего чата и его сообщений
   private setupMessagesSubscription(): void {
     this.currentChatId$.pipe(
       filter(chatId => chatId !== null),
@@ -107,14 +105,10 @@ export class ChatService {
         const sortedMessages = messages.sort((a, b) =>
           new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         );
-
-        console.log('Новые сообщения получены:', sortedMessages);
         subscriber.next(sortedMessages);
       }, error => {
-        console.error('Ошибка при получении сообщений:', error);
         subscriber.error(error);
       });
-
       // Возвращаем функцию очистки
       return () => unsubscribe();
     });
@@ -148,58 +142,5 @@ export class ChatService {
       }),
       map(() => null)
     );
-  }
-
-  // Получение истории сообщений
-  public getMessageHistory(chatId: string): Observable<Message[]> {
-    const messagesRef = ref(dbChat, `messages/${chatId}`);
-
-    return from(get(messagesRef)).pipe(
-      map(snapshot => {
-        const messages: Message[] = [];
-        const data = snapshot as any;  // Добавляем приведение типа
-        data.forEach((childSnapshot: any) => {
-          messages.push({
-            id: childSnapshot.key,
-            chatId,
-            ...childSnapshot.val()
-          });
-        });
-        return messages.sort((a, b) =>
-          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-        );
-      }),
-      tap(messages => console.log('История сообщений загружена:', messages))
-    );
-  }
-
-  // Подписка на список чатов через Firestore
-  subscribeToChats(): Observable<Chat[]> {
-    return new Observable<Chat[]>(subscriber => {
-      const chatsRef = collection(db, 'chats');
-      const q = query(chatsRef, orderBy('createdAt', 'desc'));
-
-      const unsubscribe = onSnapshot(q,
-        (snapshot) => {
-          const chats: Chat[] = [];
-          snapshot.forEach((doc) => {
-            chats.push({
-              id: doc.id,
-              ...doc.data()
-            } as Chat);
-          });
-
-          console.log('Получены чаты из Firestore:', chats);
-          subscriber.next(chats);
-        },
-        (error) => {
-          console.error('Ошибка при получении чатов:', error);
-          subscriber.error(error);
-        }
-      );
-
-      // Возвращаем функцию отписки
-      return () => unsubscribe();
-    });
   }
 }

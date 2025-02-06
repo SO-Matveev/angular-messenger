@@ -30,7 +30,6 @@ export class UserListComponent implements OnInit {
       width: '400px',
       disableClose: false // Позволяет закрыть диалог по клику вне окна
     });
-
     // Обработка результата закрытия диалога (если нужно)
     dialogRef.afterClosed()
   }

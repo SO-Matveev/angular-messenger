@@ -39,12 +39,6 @@ export const loadMessagesFailure = createAction(
   props<{ error: any }>()
 );
 
-// Отправка сообщения
-export const sendMessage = createAction(
-  '[Chat] Send Message',
-  props<{ message: Partial<Message> }>()
-);
-
 // Получение нового сообщения
 export const receiveMessage = createAction(
   '[Chat] Receive Message',

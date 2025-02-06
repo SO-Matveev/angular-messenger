@@ -63,17 +63,4 @@ export class MainPageComponent implements OnInit {
     });
     this.user$ = this.authService.getCurrentUser();
   }
-
-  // // Выход из системы
-  public logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']);
-    });
-  }
-
-  // // Переход на страницу профиля
-  public goToProfile() {
-    this.router.navigate(['/profile']);
-  }
-
 }
