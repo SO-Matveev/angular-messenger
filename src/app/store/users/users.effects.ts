@@ -1,7 +1,6 @@
-// store/users/users.effects.ts
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, mergeMap, switchMap} from 'rxjs/operators';
+import {catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import {of} from 'rxjs';
 import {UserService} from '../../modules/user-list/services/user.service';
 import {

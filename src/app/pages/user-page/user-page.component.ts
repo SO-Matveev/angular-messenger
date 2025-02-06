@@ -12,6 +12,8 @@ import { Store } from '@ngrx/store';
 import { selectUsers } from '../../store/users/users.selectors';
 import { switchMap, map } from 'rxjs/operators';
 import { loadUsers } from '../../store/users/users.actions';
+import {UserService} from '../../modules/user-list/services/user.service';
+
 
 @Component({
   selector: 'app-users-profile',
@@ -33,8 +35,11 @@ export class UserPageComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private store: Store
-  ) {}
+    private store: Store,
+    private userService: UserService,
+  ) {
+
+  }
 
   ngOnInit() {
     // Сначала загружаем список пользователей
@@ -65,5 +70,10 @@ export class UserPageComponent implements OnInit {
     this.authService.logout().subscribe(() => {
       this.router.navigate(['/login']);
     });
+  }
+
+  // Метод для возврата на главную страницу
+  public goBack(): void {
+    this.router.navigate(['/'])
   }
 }
