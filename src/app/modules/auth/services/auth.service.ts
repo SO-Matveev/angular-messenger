@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { auth, firestore } from '../../../core/firebase-config';
+import { auth, db } from '../../../core/firebase-config';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,10 +21,11 @@ export class AuthService {
           password: password, // Не храните пароль в открытом виде на практике
           is_online: true,
         };
-        return setDoc(doc(firestore, 'users', user.id), user);
+        return setDoc(doc(db, 'users', user.id), user);  
       })
     );
   }
+
 
   // Вход пользователя
   public login(email: string, password: string): Observable<User> {
@@ -32,9 +33,10 @@ export class AuthService {
       switchMap((userCredential) => {
         const userId = userCredential.user?.uid;
         return new Observable<User>((observer) => {
-          const userRef = doc(firestore, 'users', userId);
+          const userRef = doc(db, 'users', userId);
           const unsubscribe = onSnapshot(userRef, (snapshot) => {
             const user = snapshot.data() as User;
+
             observer.next(user);
           });
           return () => unsubscribe();

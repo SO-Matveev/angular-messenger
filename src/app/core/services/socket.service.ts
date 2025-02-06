@@ -5,7 +5,15 @@ import { Message } from '../interfaces/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
-  constructor(private socket: Socket) {}
+  constructor(public socket: Socket) {
+    this.socket.on('connect', () => {
+      console.log('Socket connected');
+    });
+
+    this.socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
+    });
+  }
 
   // Подписка на новые сообщения
   listenForMessages(): Observable<Message> {
@@ -15,5 +23,10 @@ export class SocketService {
   // Отправка сообщения
   sendMessage(message: Message): void {
     this.socket.emit('message', message);
+  }
+
+  // Подписка на добавление чата
+  listenForNewChats(): Observable<any> {
+    return this.socket.fromEvent('chatAdded');
   }
 }

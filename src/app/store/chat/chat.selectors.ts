@@ -1,4 +1,3 @@
-
 import { createSelector } from '@ngrx/store';
 import { ChatState } from './chat.reducer';
 
@@ -7,7 +6,10 @@ export const selectChatState = (state: { chat: ChatState }) => state.chat;
 // Список чатов
 export const selectChats = createSelector(
   selectChatState,
-  (state) => state.chats
+  (state: ChatState) => {
+    console.log('Selector state:', state); // для отладки
+    return state.chats;
+  }
 );
 
 // Выбранный чат

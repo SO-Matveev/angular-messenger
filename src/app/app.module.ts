@@ -9,11 +9,12 @@ import {reducers} from './store';
 import { EffectsModule } from '@ngrx/effects';
 import {AuthModule} from './modules/auth/auth.module';
 import {AuthEffects} from './store/auth/auth.effects';
-import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
 import {ChatModule} from './modules/chat/chat.module';
 import { MatDialogModule } from '@angular/material/dialog';
-const config: SocketIoConfig = { url: 'http://localhost:3000, options: {} ', options: {} };
+import { ChatEffects } from './store/chat/chat.effects';
+import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
 
+const config: SocketIoConfig = { url: 'http://localhost:3000, options: {} ', options: {} };
 @NgModule({
   declarations: [
     AppComponent
@@ -24,7 +25,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000, options: {} ', opt
     SocketIoModule.forRoot(config),
     StoreModule.forRoot(reducers),
     BrowserAnimationsModule,
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, ChatEffects]),
     MatDialogModule,
     AuthModule,
     ChatModule

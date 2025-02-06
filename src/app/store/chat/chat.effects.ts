@@ -1,17 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {of, switchMap, mergeMap} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {catchError, mergeMap} from 'rxjs/operators';
 import {ChatService} from '../../modules/chat/services/chat.service';
-import {addChat, loadChats, loadChatsSuccess} from './chat.actions';
-import {Socket} from 'ngx-socket-io';
+import {loadChats} from './chat.actions';
 
 @Injectable()
 export class ChatEffects {
 
   constructor(private actions$: Actions,
               private chatService: ChatService,
-              private socket: Socket,
   ) {
   }
 
@@ -20,17 +18,9 @@ export class ChatEffects {
       ofType(loadChats),
       mergeMap(() =>
         this.chatService.loadChats().pipe(
-          catchError(() => of({type: '[Chat] Load Chats Failure'}))
+          catchError((error) => of({type: '[Chat] Load Chats Failure', error}))
         )
       )
     )
   );
-
-  chatAdded$ = createEffect(() =>
-    this.socket.fromEvent('chatAdded').pipe(
-      map((chat: any) => addChat({chat}))
-    )
-  );
-
-
 }
