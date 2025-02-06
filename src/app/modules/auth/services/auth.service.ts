@@ -33,10 +33,11 @@ export class AuthService {
         const userId = userCredential.user?.uid;
         return new Observable<User>((observer) => {
           const userRef = doc(firestore, 'users', userId);
-          onSnapshot(userRef, (snapshot) => {
+          const unsubscribe = onSnapshot(userRef, (snapshot) => {
             const user = snapshot.data() as User;
             observer.next(user);
           });
+          return () => unsubscribe();
         });
       })
     );

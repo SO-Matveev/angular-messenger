@@ -1,21 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { register, login } from '../../../../store/auth/auth.actions';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {selectAuthError, selectAuthLoading} from '../../../../store/auth/auth.selectors';
-
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
 })
-export class AuthComponent {
+export class AuthComponent implements OnDestroy {
   protected authForm: FormGroup;
   public isLoginMode = false;
   protected error$: Observable<string | null>;
   protected loading$: Observable<boolean>;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -27,8 +28,17 @@ export class AuthComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    this.error$ = this.store.select(selectAuthError);
-    this.loading$ = this.store.select(selectAuthLoading);
+    this.error$ = this.store.select(selectAuthError).pipe(
+      takeUntil(this.destroy$)
+    );
+    this.loading$ = this.store.select(selectAuthLoading).pipe(
+      takeUntil(this.destroy$)
+    );
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // Переключение между режимами входа и регистрации
