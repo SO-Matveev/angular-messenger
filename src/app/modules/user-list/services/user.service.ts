@@ -6,8 +6,8 @@ import { map, catchError, tap } from 'rxjs/operators';
 import { db } from '../../../core/firebase-config';
 import { User } from '../../../core/interfaces/interfaces';
 
-import { 
-  loadUsersSuccess, 
+import {
+  loadUsersSuccess,
   loadUsersFailure,
   addUsersSuccess,
   updateUserStatusSuccess
@@ -23,7 +23,7 @@ export class UserService {
 
   private subscribeToUsers(): void {
     const usersRef = collection(db, 'users');
-    onSnapshot(usersRef, 
+    onSnapshot(usersRef,
       (snapshot) => {
         const users = snapshot.docs.map(doc => ({
           id: doc.id,
@@ -32,7 +32,6 @@ export class UserService {
         this.store.dispatch(loadUsersSuccess({ users }));
       },
       (error) => {
-        console.error('Error listening to users:', error);
         this.store.dispatch(loadUsersFailure({ error: error.message }));
       }
     );
@@ -46,11 +45,9 @@ export class UserService {
         ...doc.data()
       })) as User[]),
       tap(users => {
-        console.log('Loaded users:', users);
         this.store.dispatch(loadUsersSuccess({ users }));
       }),
       catchError(error => {
-        console.error('Error loading users:', error);
         this.store.dispatch(loadUsersFailure({ error }));
         return of([]);
       })
@@ -58,7 +55,7 @@ export class UserService {
   }
 
   public addUsers(users: Partial<User>[]): Observable<void> {
-    const batch = users.map(user => 
+    const batch = users.map(user =>
       setDoc(doc(collection(db, 'users')), {
         ...user,
         is_online: false,
@@ -72,7 +69,6 @@ export class UserService {
       }),
       map(() => null),
       catchError(error => {
-        console.error('Error adding users:', error);
         return of(null);
       })
 
@@ -100,4 +96,4 @@ export class UserService {
       map(snapshot => snapshot.docs.map(doc => doc.data() as User))
     );
   }
-} 
+}

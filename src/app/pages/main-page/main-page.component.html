@@ -4,15 +4,12 @@
   </mat-card-header>
   <mat-card-content class="main-container">
     <div class="info-container">
-      <div>
-        <app-chat-list></app-chat-list>
-      </div>
-      <div>
-        <app-users-list></app-users-list>
-      </div>
+      <app-user-profile></app-user-profile>
+      <app-chat-list></app-chat-list>
+      <app-users-list></app-users-list>
     </div>
-      <div class="messages-section">
-        <app-chat class="app-chat"></app-chat>
-      </div>
+    <div class="messages-section">
+      <app-chat class="app-chat"></app-chat>
+    </div>
   </mat-card-content>
 </mat-card>

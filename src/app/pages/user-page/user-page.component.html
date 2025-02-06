@@ -4,9 +4,8 @@
   </mat-card-header>
   <mat-card-content>
     <div *ngIf="user$ | async as user" class="profile-info">
-      <p><strong>Имя пользователя:</strong> {{ user.displayName || 'Не указано' }}</p>
+      <p><strong>Имя пользователя:</strong> {{ user.username || 'Не указано' }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Статус:</strong> {{ user.emailVerified ? 'Подтвержден' : 'Не подтвержден' }}</p>
     </div>
 
     <button mat-raised-button color="warn" (click)="logout()">

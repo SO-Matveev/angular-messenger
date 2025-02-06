@@ -32,8 +32,6 @@ export class UserListComponent implements OnInit {
     });
 
     // Обработка результата закрытия диалога (если нужно)
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog closed:', result);
-    });
+    dialogRef.afterClosed()
   }
 }

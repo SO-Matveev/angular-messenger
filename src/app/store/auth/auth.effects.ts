@@ -1,10 +1,21 @@
 import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType } from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {AuthService} from '../../modules/auth/services/auth.service';
-import {register, registerSuccess, registerFailure, login, loginSuccess, loginFailure} from './auth.actions';
+import {
+  register,
+  registerSuccess,
+  registerFailure,
+  login,
+  loginSuccess,
+  loginFailure,
+  logout,
+  logoutFailure, logoutSuccess
+} from './auth.actions';
 import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Router} from '@angular/router';
+import {signOut} from 'firebase/auth';
+import {auth} from '../../core/firebase-config';
 
 @Injectable()
 export class AuthEffects {
@@ -43,5 +54,18 @@ export class AuthEffects {
         )
       )
     }
+  )
+  // Эффект для выхода
+  logout$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(logout),
+        tap(() => {
+          signOut(auth);
+        }),
+        map(() => logoutSuccess()),
+        catchError((error) => of(logoutFailure({error})))
+      )
+    }
   );
+
 }

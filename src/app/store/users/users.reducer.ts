@@ -1,4 +1,3 @@
-// store/users/users.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import { User } from '../../core/interfaces/interfaces'
 import * as UsersActions from './users.actions';

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatDialogComponent } from '../components/chat-dialog/chat-dialog.component';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../store/index';
+import {AppState} from '../../../store/app.interface';
 import { collection, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
 import { from, Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';

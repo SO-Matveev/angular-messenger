@@ -7,17 +7,20 @@ import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import {AddUserDialogComponent} from './components/add-user-dialog/add-user-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import {UserProfileComponent} from './components/user-profile/user-profile.component';
+import {RouterLink} from '@angular/router';
 
 @NgModule({
-  declarations: [UserListComponent, AddUserDialogComponent],
+  declarations: [UserListComponent, AddUserDialogComponent, UserProfileComponent],
   imports: [
     CommonModule,
     MatIconModule,
     MatListModule,
     MatCardModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    RouterLink
   ],
-  exports: [UserListComponent, AddUserDialogComponent]
+  exports: [UserListComponent, AddUserDialogComponent, UserProfileComponent]
 })
 export class UserListModuleModule {}

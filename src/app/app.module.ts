@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {BrowserAnimationsModule, provideAnimations} from '@angular/platform-browser/animations';
 import {StoreModule} from '@ngrx/store';
-import {reducers} from './store';
+import {reducers} from './store/app.interface';
 import { EffectsModule } from '@ngrx/effects';
 import {AuthModule} from './modules/auth/auth.module';
 import {AuthEffects} from './store/auth/auth.effects';
