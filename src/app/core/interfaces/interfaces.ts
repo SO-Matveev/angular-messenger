@@ -1,5 +1,3 @@
-import firebase from 'firebase/compat';
-import FieldValue = firebase.firestore.FieldValue;
 
 export interface User {
   id: string;
@@ -19,6 +17,6 @@ export interface Message {
   content?: string;
   from_user?: string;
   chatId?: string;
-  timestamp?: string | Date | firebase.firestore.Timestamp;
+  timestamp?: Date | string;
 }
 

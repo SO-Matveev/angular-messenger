@@ -13,6 +13,9 @@
                    [class.my-message]="message.from_user === currentUserId">
       <div class="message-bubble">
         <div class="message-content">{{ message.content }}</div>
+        <div class="message-time">
+          {{ message.timestamp | date:'short' }}
+        </div>
       </div>
     </mat-list-item>
   </mat-list>
@@ -20,14 +23,13 @@
   <!-- Форма отправки сообщения -->
   <div class="message-input">
     <mat-form-field appearance="outline" class="input-field">
-      <i matIconPrefix class="fas fa-comment input-icon"></i>
       <input matInput [(ngModel)]="newMessage"
-             name="newMessage"
+             (keyup.enter)="onSendMessage()"
              placeholder="Напишите сообщение...">
     </mat-form-field>
     <button mat-flat-button
             color="primary"
-            (click)="sendMessage()"
+            (click)="onSendMessage()"
             [disabled]="!newMessage.trim()">
       <i class="fas fa-paper-plane"></i>
       Отправить

@@ -1,68 +1,77 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, filter, withLatestFrom, tap } from 'rxjs/operators';
 import { Message } from '../../../../core/interfaces/interfaces';
-import { SocketService } from '../../../../core/services/socket.service';
-import { Subscription } from 'rxjs';
-import {receiveMessage, sendMessage, selectChat} from '../../../../store/chat/chat.actions';
-import {AuthService} from '../../../auth/services/auth.service';
-import {selectMessages, selectSelectedChat} from '../../../../store/chat/chat.selectors';
+import { AuthService } from '../../../auth/services/auth.service';
+import { ChatService } from '../../services/chat.service';
+import { selectMessages, selectSelectedChat } from '../../../../store/chat/chat.selectors';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css'],
+  styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  // Выбранный чат
   protected selectedChat$ = this.store.select(selectSelectedChat);
-  // Сообщения текущего чата
   protected messages$ = this.store.select(selectMessages);
-  // Текст нового сообщения
   public newMessage = '';
-  // ID текущего пользователя
   public currentUserId: string | null = null;
 
-  private messageSubscription!: Subscription;
+  private destroy$ = new Subject<void>();
+  private sendMessage$ = new Subject<string>();
 
   constructor(
     private store: Store,
     private authService: AuthService,
-    private socketService: SocketService
-  ) {}
+    private chatService: ChatService
+  ) {
+    this.setupMessageSending();
+  }
+
+  private setupMessageSending(): void {
+    this.sendMessage$.pipe(
+      takeUntil(this.destroy$),
+      withLatestFrom(this.selectedChat$),
+      filter(([content, chat]) => !!content && !!chat && !!this.currentUserId),
+      tap(([content, chat]) => {
+        const message: Partial<Message> = {
+          content,
+          from_user: this.currentUserId!,
+          chatId: chat!.id,
+          timestamp: new Date().toISOString()
+        };
+        this.chatService.sendMessage(message).subscribe(
+          () => this.newMessage = '',
+          error => console.error('Ошибка при отправке сообщения:', error)
+        );
+      })
+    ).subscribe();
+  }
 
   ngOnInit(): void {
-    // Получаем ID текущего пользователя
     this.currentUserId = this.authService.getCurrentUserId();
 
-    // Подписываемся на новые сообщения через Socket.io
-    this.messageSubscription = this.socketService.listenForMessages().subscribe((message) => {
-      this.store.dispatch(receiveMessage({ message }));
-    });
+    // Подписываемся на изменения выбранного чата
+    this.selectedChat$.pipe(
+      takeUntil(this.destroy$),
+      filter(chat => !!chat),
+      tap(chat => {
+        console.log('Выбран чат:', chat);
+        this.chatService.setCurrentChat(chat!.id);
+      })
+    ).subscribe();
   }
 
-  // Отправка сообщения
-  public sendMessage(): void {
-    if (this.newMessage.trim() && this.currentUserId) {
-      const message: Partial<Message> = {
-        content: this.newMessage,
-        from_user: this.currentUserId,
-        // chatId: this.selectedChat$?.id,
-        timestamp: new Date().toISOString(),
-      };
-      this.store.dispatch(sendMessage({ message }));
-      this.newMessage = ''; // Очищаем поле ввода
+  // Метод для отправки сообщения
+  public onSendMessage(): void {
+    if (this.newMessage.trim()) {
+      this.sendMessage$.next(this.newMessage.trim());
     }
-  }
-
-  // Выбор чата
-  public selectChat(chatId: string): void {
-    this.store.dispatch(selectChat({ chatId }));
   }
 
   ngOnDestroy(): void {
-    // Отписываемся от Socket.io при уничтожении компонента
-    if (this.messageSubscription) {
-      this.messageSubscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

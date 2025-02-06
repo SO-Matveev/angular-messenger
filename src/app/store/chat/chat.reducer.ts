@@ -45,8 +45,11 @@ export const chatReducer = createReducer(
     messages: [], // Очищаем сообщения при выборе нового чата
   })),
   // Добавление чата
-  on(ChatActions.addChat, (state, { chat }) => ({
-    ...state, chats: [...state.chats, chat] })),
+  on(ChatActions.addChat, (state) => ({
+    ...state,
+    loading: true,
+    error: null
+  })),
 
   // Загрузка сообщений
   on(ChatActions.loadMessages, (state) => ({
@@ -69,5 +72,18 @@ export const chatReducer = createReducer(
   on(ChatActions.receiveMessage, (state, { message }) => ({
     ...state,
     messages: [...state.messages, message], // Добавляем новое сообщение в список
+  })),
+
+  // Обновляем обработку добавления чата
+  on(ChatActions.addChatSuccess, (state, { chat }) => ({
+    ...state,
+    chats: [...state.chats, chat],
+    loading: false
+  })),
+
+  on(ChatActions.addChatFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
   }))
 );

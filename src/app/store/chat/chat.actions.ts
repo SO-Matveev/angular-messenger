@@ -20,7 +20,10 @@ export const selectChat = createAction(
   props<{ chatId: string }>()
 );
 // ДОбавление чата
-export const addChat = createAction('[Chat] Add Chat', props<{ chat: any }>());
+export const addChat = createAction(
+  '[Chat] Add Chat',
+  props<{ chat: Chat }>()
+);
 
 // Загрузка сообщений
 export const loadMessages = createAction(
@@ -46,5 +49,16 @@ export const sendMessage = createAction(
 export const receiveMessage = createAction(
   '[Chat] Receive Message',
   props<{ message: Message }>()
+);
+
+// Добавление чата
+export const addChatSuccess = createAction(
+  '[Chat] Add Chat Success',
+  props<{ chat: Chat }>()
+);
+
+export const addChatFailure = createAction(
+  '[Chat] Add Chat Failure',
+  props<{ error: any }>()
 );
 
