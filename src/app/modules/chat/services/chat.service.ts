@@ -69,11 +69,11 @@ export class ChatService {
         // Диспатчим успешное добавление чата
         this.store.dispatch(addChatSuccess({ chat }));
       }),
-      map(() => void 0),
+      map(() => null),
       catchError(error => {
         console.error('Ошибка при создании чата:', error);
         this.store.dispatch(addChatFailure({ error }));
-        return of(void 0);
+        return of(null);
       })
     );
   }
